@@ -14,26 +14,38 @@ class BooksApp extends React.Component {
     doneRead: []
   }
 
-  toShelf = (book) => {
-    if(book.shelf === 'currentlyReading'){
+  toShelf = (value, bookID) => {
+    let movedBook = this.state.allBooks.filter((book) => book.id === bookID)
+    console.log(movedBook, value)
+
+    if(value === 'currentlyReading'){
       this.setState(state => ({
-        reading: state.reading.concat([ book ])
-      })) 
-    } else if(book.shelf === 'wantToRead'){
-      this.setState(state => ({
-        futureRead: state.futureRead.concat([ book ])
+        reading: state.reading.push(movedBook)
       }))
-    } else if(book.shelf === 'read'){
+      BooksAPI.update(movedBook, 'currentlyReading') 
+    } else if(value === 'wantToRead'){
       this.setState(state => ({
-        doneRead: state.doneRead.concat([ book ])
+        futureRead: state.futureRead.push(movedBook)
       }))
+      BooksAPI.update(movedBook, 'wantToRead') 
+    } else if(value === 'read'){
+      this.setState(state => ({
+        doneRead: state.doneRead.push(movedBook)
+      }))
+      BooksAPI.update(movedBook, 'read') 
+    } else if(value === 'none') {
+      this.setState(state => ({
+        allBooks: state.allBooks.filter((book) => book.id !== bookID)
+      }))
+      BooksAPI.update(movedBook, 'none')
     }
+    console.log(this.state.futureRead)
   }
 
   componentDidMount() {
     BooksAPI.getAll().then((allBooks) => {
-      this.setState({ allBooks })
       this.setState({
+        allBooks: allBooks,
         futureRead: allBooks.filter((book) => book.shelf === 'wantToRead'),
         doneRead: allBooks.filter((book) => book.shelf === 'read'),
         reading: allBooks.filter((book) => book.shelf === 'currentlyReading')

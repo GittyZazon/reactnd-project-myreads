@@ -5,8 +5,10 @@ import './index.css'
 class Bookshelf extends Component {
 
 	handleChange = (e) => {
-		let book = e.target.parent().find('.')
-		book.shelf = (e.target.value)
+		let value = e.target.value
+		let bookID = e.target.closest('li').classList[0]
+		this.props.onAddToShelf(value, bookID)
+		e.target.closest('li').remove()
 	}
 
 	render() {
@@ -22,7 +24,7 @@ class Bookshelf extends Component {
                   <div className="bookshelf-books">
                     <ol className="books-grid">
 					  {this.props.reading.map((book) => ( 
-					    <li key = {book.id}>
+					    <li key = {book.id} className={book.id}>
 					      <div className="book">
 					        <div className="book-top">
 					          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
@@ -49,7 +51,7 @@ class Bookshelf extends Component {
                   <div className="bookshelf-books">
                     <ol className="books-grid">
 					  {this.props.futureRead.map((book) => ( 
-					    <li key = {book.id}>
+					    <li key = {book.id} className={book.id}>
 					      <div className="book">
 					        <div className="book-top">
 					          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
@@ -76,7 +78,7 @@ class Bookshelf extends Component {
                   <div className="bookshelf-books">
                     <ol className="books-grid">
 					  {this.props.doneRead.map((book) => ( 
-					    <li key = {book.id}>
+					    <li key = {book.id} className={book.id}>
 					      <div className="book">
 					        <div className="book-top">
 					          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
