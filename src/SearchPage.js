@@ -15,14 +15,22 @@ class SearchPage extends Component {
 		this.setState({ query })
 		if(query) {
 			BooksAPI.search(query).then(books => {
-				if (books.length) {
+				if (books.length >= 1) {
 					this.setState({ showingBooks: books })
+				} else {
+					this.setState({ showingBooks: [] })
 				}
 			})
+		}
+		if (query === '') {
+			this.setState(state =>
+				({ query: '', showingBooks: [] })
+			)
 		}
 	}
 
 	handleChange = (e) => {
+		e.preventDefault()
 		let value = e.target.value
 		let bookID = e.target.closest('li').classList[0]
 		this.props.addToShelf(value, bookID)
@@ -44,6 +52,12 @@ class SearchPage extends Component {
 				</div>
 				<div className="search-books-results">
 					<ol className="books-grid">
+					{this.state.showingBooks.length === 0 && this.state.query !== '' && (
+						<div>No books in our database match your search. Please try a new search term.</div>
+					)}
+					{this.state.showingBooks.length === 0 && this.state.query === '' && (
+						<li></li>
+					)}
 					{this.state.showingBooks.map((book) =>  
 					    <li key = {book.id} className={book.id}>
 					      <div className="book">
