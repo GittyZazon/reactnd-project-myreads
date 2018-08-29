@@ -8,7 +8,6 @@ class Bookshelf extends Component {
 		let value = e.target.value
 		let bookID = e.target.closest('li').classList[0]
 		this.props.onAddToShelf(value, bookID)
-		e.target.closest('li').remove()
 	}
 
 	render() {
@@ -23,13 +22,13 @@ class Bookshelf extends Component {
                   <h2 className="bookshelf-title">Currently Reading</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-					  {this.props.reading.map((book) => ( 
+					  {this.props.allBooks.filter((book) => (book.shelf === 'currentlyReading')).map((book) => ( 
 					    <li key = {book.id} className={book.id}>
 					      <div className="book">
 					        <div className="book-top">
 					          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
 					          <div className="book-shelf-changer">
-					            <select onChange={this.handleChange}>
+					            <select onChange={this.handleChange} defaultValue="move">
 					              <option value="move" disabled>Move to...</option>
 					              <option value="currentlyReading">Currently Reading</option>
 					              <option value="wantToRead">Want to Read</option>
@@ -50,13 +49,13 @@ class Bookshelf extends Component {
                   <h2 className="bookshelf-title">Want to Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-					  {this.props.futureRead.map((book) => ( 
+					  {this.props.allBooks.filter((book) => (book.shelf === 'wantToRead')).map((book) => ( 
 					    <li key = {book.id} className={book.id}>
 					      <div className="book">
 					        <div className="book-top">
 					          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
 					          <div className="book-shelf-changer">
-					            <select onChange={this.handleChange}>
+					            <select onChange={this.handleChange} defaultValue="move">
 					              <option value="move" disabled>Move to...</option>
 					              <option value="currentlyReading">Currently Reading</option>
 					              <option value="wantToRead">Want to Read</option>
@@ -77,13 +76,13 @@ class Bookshelf extends Component {
                   <h2 className="bookshelf-title">Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-					  {this.props.doneRead.map((book) => ( 
+					  {this.props.allBooks.filter((book) => (book.shelf === 'read')).map((book) => ( 
 					    <li key = {book.id} className={book.id}>
 					      <div className="book">
 					        <div className="book-top">
 					          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
 					          <div className="book-shelf-changer">
-					            <select onChange={this.handleChange}>
+					            <select onChange={this.handleChange} defaultValue="move">
 					              <option value="move" disabled>Move to...</option>
 					              <option value="currentlyReading">Currently Reading</option>
 					              <option value="wantToRead">Want to Read</option>
