@@ -6,20 +6,26 @@ import './index.css'
 class SearchPage extends Component {
 	state = {
 		query: '',
-		searchResult: []
+		showingBooks: []
 	}
+
+
 
 	updateQuery = (query) => {
 		this.setState({ query })
+		if(query) {
+			BooksAPI.search(query).then(books => {
+				if (books.length) {
+					this.setState({ showingBooks: books })
+				}
+			})
+		}
 	}
 
-	clearQuery = () => {
-		this.setState({ query: '' })
-	}
-
-	componentDidMount() {
-		let searching = BooksAPI.search(this.state.query)
-		this.setState({ searchResult: searching })
+	handleChange = (e) => {
+		let value = e.target.value
+		let bookID = e.target.closest('li').classList[0]
+		this.props.onAddToShelf(value, bookID)
 	}
 
 	render(){
@@ -29,16 +35,16 @@ class SearchPage extends Component {
 					<Link className="close-search" to="/">Close</Link>
 					<div className="search-books-input-wrapper">
 						<input 
-						type="text"
-						placeholder="Search by title or author"
-						value={this.state.query}
-						onChange={(e) => this.updateQuery(e.target.value)}
+							type="text"
+							placeholder="Search by title or author"
+							value={this.state.query}
+							onChange={(e) => this.updateQuery(e.target.value)}
 						/>
 					</div>
 				</div>
 				<div className="search-books-results">
 					<ol className="books-grid">
-					{this.state.searchResult.map((book) => ( 
+					{this.state.showingBooks.map((book) =>  
 					    <li key = {book.id} className={book.id}>
 					      <div className="book">
 					        <div className="book-top">
@@ -57,7 +63,7 @@ class SearchPage extends Component {
 					        <div className="book-authors">{book.authors}</div>
 					      </div>
 					    </li>
-					))}
+					)}
 					</ol>
 				</div>
 			</div>
