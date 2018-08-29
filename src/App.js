@@ -1,7 +1,5 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-//import sortBy from 'sort-by'
-//import escapeRegExp from 'escape-string-regexp'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import Bookshelf from './Bookshelf.js'
@@ -14,24 +12,19 @@ class BooksApp extends React.Component {
   }
 
   toShelf = (value, bookID) => {
-    let movedBook = this.state.allBooks.filter((book) => book.id === bookID)
-    movedBook[0].shelf = value
+    BooksAPI.get(bookID).then(book => {
     this.setState(state => ({
-      allBooks: state.allBooks.filter((book) => book.id !== bookID).concat(movedBook)
+      allBooks: state.allBooks.filter((book) => book.id !== bookID).concat(book)
     }))
-    BooksAPI.update(movedBook, value)
+    BooksAPI.update(book, value)
+    })
   }
 
   
 
   componentDidMount() {
     BooksAPI.getAll().then((allBooks) => {
-      this.setState({
-        allBooks: allBooks,
-        futureRead: allBooks.filter((book) => book.shelf === 'wantToRead'),
-        doneRead: allBooks.filter((book) => book.shelf === 'read'),
-        reading: allBooks.filter((book) => book.shelf === 'currentlyReading')
-      })
+      this.setState({ allBooks })
     })
   }
 
@@ -42,14 +35,16 @@ class BooksApp extends React.Component {
           <Route exact path="/" render={() => (
             <Bookshelf 
               allBooks={this.state.allBooks}
-              onAddToShelf={this.toShelf}
+              addToShelf={this.toShelf}
             />
           )}/>
 
           <Route path='/search' render={() => (
             <SearchPage 
               onSearch={this.search}
+              allBooks={this.state.allBooks}
               showingBooks={this.state.showingBooks}
+              addToShelf={this.toShelf}
             />
           )}/>
       </div>    
