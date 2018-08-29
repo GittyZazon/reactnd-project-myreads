@@ -7,7 +7,7 @@ class Bookshelf extends Component {
 	handleChange = (e) => {
 		let value = e.target.value
 		let bookID = e.target.closest('li').classList[0]
-		this.props.onAddToShelf(value, bookID)
+		this.props.addToShelf(value, bookID)
 	}
 
 	render() {
