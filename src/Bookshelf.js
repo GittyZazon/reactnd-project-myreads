@@ -5,6 +5,7 @@ import './index.css'
 class Bookshelf extends Component {
 
 	handleChange = (e) => {
+		e.preventDefault()
 		let value = e.target.value
 		let bookID = e.target.closest('li').classList[0]
 		this.props.addToShelf(value, bookID)
@@ -26,7 +27,7 @@ class Bookshelf extends Component {
 					    <li key = {book.id} className={book.id}>
 					      <div className="book">
 					        <div className="book-top">
-					          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+					          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: book.imageLinks && `url(${book.imageLinks.thumbnail})` }}></div>
 					          <div className="book-shelf-changer">
 					            <select onChange={this.handleChange} defaultValue={book.shelf}>
 					              <option value="move" disabled>Move to...</option>
